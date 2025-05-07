@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/task.dart';
 import '../data/task_data.dart';
+import '../utils/constants.dart';
 
 class TaskTile extends StatelessWidget {
   final Task task;
@@ -12,8 +13,7 @@ class TaskTile extends StatelessWidget {
     return ListTile(
       title: Text(
         task.title,
-        style: TextStyle(
-            decoration: task.isDone ? TextDecoration.lineThrough : null),
+        style: task.isDone ? AppStyles.taskTitleDone : AppStyles.taskTitle,
       ),
       leading: Checkbox(
         value: task.isDone,
@@ -21,7 +21,28 @@ class TaskTile extends StatelessWidget {
       ),
       trailing: IconButton(
         icon: Icon(Icons.delete),
-        onPressed: () => context.read<TaskData>().deleteTask(task),
+        onPressed: () {
+          showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text('Supprimer la tâche ?'),
+              content: Text('Cette action est irréversible.'),
+              actions: [
+                TextButton(
+                  child: Text('Annuler'),
+                  onPressed: () => Navigator.pop(context),
+                ),
+                TextButton(
+                  child: Text('Supprimer', style: TextStyle(color: AppColors.primary)),
+                  onPressed: () {
+                    context.read<TaskData>().deleteTask(task);
+                    Navigator.pop(context);
+                  },
+                ),
+              ],
+            ),
+          );
+        },
       ),
     );
   }

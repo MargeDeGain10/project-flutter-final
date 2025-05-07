@@ -32,4 +32,18 @@ class TaskData extends ChangeNotifier {
     _storage.saveTasks(_tasks);
     notifyListeners();
   }
+
+  void sortByName() {
+  _tasks.sort((a, b) => a.title.compareTo(b.title));
+  notifyListeners();
+}
+
+void sortByStatus() {
+  _tasks.sort((a, b) {
+    if (a.isDone == b.isDone) return 0;
+    return a.isDone ? 1 : -1; 
+  });
+  notifyListeners();
+}
+
 }
